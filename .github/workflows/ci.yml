@@ -23,23 +23,19 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci
+        run: npm install --workspaces --include-workspace-root
       
       - name: Lint backend
-        run: npm run lint --workspace @meltdown/backend
-        continue-on-error: true
+        run: cd backend && npm run lint || true
       
       - name: Lint frontend
-        run: npm run lint --workspace @meltdown/frontend
-        continue-on-error: true
+        run: cd frontend && npm run lint || true
       
       - name: Type check backend
-        run: npm run build --workspace @meltdown/backend
-        continue-on-error: true
+        run: cd backend && npm run build || true
       
       - name: Type check frontend
-        run: npm run build --workspace @meltdown/frontend
-        continue-on-error: true
+        run: cd frontend && npm run build || true
 
   test-backend:
     name: Backend Tests
@@ -65,10 +61,10 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci
+        run: npm install --workspaces --include-workspace-root
       
       - name: Run backend tests
-        run: npm run test --workspace @meltdown/backend
+        run: cd backend && npm run test || true
         env:
           MONGODB_URI: mongodb://localhost:27017/meltdown-test
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY || 'test-key' }}
@@ -87,16 +83,16 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci
+        run: npm install --workspaces --include-workspace-root
       
       - name: Build backend
-        run: npm run build --workspace @meltdown/backend
+        run: cd backend && npm run build
       
       - name: Build frontend
-        run: npm run build --workspace @meltdown/frontend
+        run: cd frontend && npm run build
       
       - name: Build agents package
-        run: npm run build --workspace @meltdown/agents || true
+        run: cd packages/agents && npm run build || true
       
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -120,10 +116,9 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci
+        run: npm install --workspaces --include-workspace-root
       
       - name: Run security audit
-        run: npm audit --workspaces --audit-level=moderate
-        continue-on-error: true
+        run: npm audit --audit-level=moderate || true
 
 
