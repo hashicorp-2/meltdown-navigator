@@ -1,0 +1,6 @@
+{
+  "/(translator)/page": "/",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/onboarding/page": "/onboarding"
+}

@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand Palette */
+  --color-sky: #7e9ccb;
+  --color-sage: #a8d8b9;
+  --color-rose: #e8b4b8;
+  --color-sand: #f4d3c4;
+  --color-deep: #1f2933;
+  --color-ink: #111827;
+  --color-surface: #f7f9fc;
+  --color-surface-alt: #eef4f6;
+  --color-border: rgba(17, 24, 39, 0.08);
+  --color-muted: rgba(17, 24, 39, 0.55);
+  --color-success: #58b083;
+  --color-warning: #f0b45b;
+  --color-danger: #ff6b6b;
+
+  /* Typography */
+  --font-sans: "SF Pro Rounded", "Nunito", "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-heading: "SF Pro Rounded", "Nunito", "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-serif: "Georgia", "Times New Roman", serif;
+
+  /* Elevation & Shape */
+  --shadow-soft: 0 12px 40px rgba(126, 156, 203, 0.18);
+  --shadow-floating: 0 18px 60px rgba(65, 105, 225, 0.14);
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+
+  /* Layout */
+  --page-max-width: 1100px;
+  --body-background: linear-gradient(135deg, #f7f9fc 0%, #fbf7f5 100%);
+  --body-foreground: var(--color-ink);
+}
+
+@theme inline {
+  --color-background: transparent;
+  --color-foreground: var(--body-foreground);
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-surface: #0f172a;
+    --color-surface-alt: #111a2d;
+    --color-border: rgba(148, 163, 184, 0.18);
+    --color-muted: rgba(226, 232, 240, 0.7);
+    --body-background: radial-gradient(circle at top, rgba(126, 156, 203, 0.25), #020617 65%);
+    --body-foreground: #e2e8f0;
+    --shadow-soft: 0 12px 40px rgba(15, 23, 42, 0.4);
+    --shadow-floating: 0 18px 60px rgba(148, 163, 184, 0.2);
+  }
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--body-background);
+  color: var(--body-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: rgba(126, 156, 203, 0.35);
+  color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

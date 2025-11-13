@@ -1,0 +1,27 @@
+# ============================================
+# LAUNCH COMMANDS - Copy and Run These
+# ============================================
+
+# OPTION 1: Fix Node.js and Deploy (Recommended)
+./scripts/fix-node-and-deploy.sh
+
+# Then start services:
+# Terminal 1: cd backend && npm run start:prod
+# Terminal 2: cd frontend && npm run start
+
+# OPTION 2: Manual Node.js Fix
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+source ~/.zshrc
+nvm install 20
+nvm use 20
+cd /Users/ogowemr/meltdown-navigator
+npm install --workspaces --include-workspace-root
+cd backend && npm run build && cd ..
+cd frontend && npm run build && cd ..
+
+# OPTION 3: Deploy to Vercel (No local Node.js needed)
+# See LAUNCH_NOW.md for Vercel deployment steps
+
+# ============================================
+# Your API key is already set in backend/.env
+# ============================================

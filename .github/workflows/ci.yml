@@ -1,0 +1,129 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  lint-and-typecheck:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Lint backend
+        run: npm run lint --workspace @meltdown/backend
+        continue-on-error: true
+      
+      - name: Lint frontend
+        run: npm run lint --workspace @meltdown/frontend
+        continue-on-error: true
+      
+      - name: Type check backend
+        run: npm run build --workspace @meltdown/backend
+        continue-on-error: true
+      
+      - name: Type check frontend
+        run: npm run build --workspace @meltdown/frontend
+        continue-on-error: true
+
+  test-backend:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run backend tests
+        run: npm run test --workspace @meltdown/backend
+        env:
+          MONGODB_URI: mongodb://localhost:27017/meltdown-test
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY || 'test-key' }}
+
+  build:
+    name: Build All
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build backend
+        run: npm run build --workspace @meltdown/backend
+      
+      - name: Build frontend
+        run: npm run build --workspace @meltdown/frontend
+      
+      - name: Build agents package
+        run: npm run build --workspace @meltdown/agents || true
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            backend/dist
+            frontend/.next
+          retention-days: 7
+
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run security audit
+        run: npm audit --workspaces --audit-level=moderate
+        continue-on-error: true
+
+
