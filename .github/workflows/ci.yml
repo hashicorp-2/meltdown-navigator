@@ -9,10 +9,15 @@ on:
 env:
   NODE_VERSION: '20.x'
 
+# Set default timeout for all jobs
+jobs:
+  _timeout: 15m
+
 jobs:
   lint-and-typecheck:
     name: Lint & Type Check
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       
@@ -23,23 +28,30 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm install --workspaces --include-workspace-root
+        run: |
+          npm install --workspaces --include-workspace-root --legacy-peer-deps
+        timeout-minutes: 10
       
       - name: Lint backend
-        run: cd backend && npm run lint || true
+        run: cd backend && npm run lint || echo "Lint failed but continuing"
+        timeout-minutes: 3
       
       - name: Lint frontend
-        run: cd frontend && npm run lint || true
+        run: cd frontend && npm run lint || echo "Lint failed but continuing"
+        timeout-minutes: 3
       
       - name: Type check backend
-        run: cd backend && npm run build || true
+        run: cd backend && npm run build || echo "Build failed but continuing"
+        timeout-minutes: 5
       
       - name: Type check frontend
-        run: cd frontend && npm run build || true
+        run: cd frontend && npm run build || echo "Build failed but continuing"
+        timeout-minutes: 5
 
   test-backend:
     name: Backend Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       mongodb:
         image: mongo:7
@@ -61,10 +73,13 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm install --workspaces --include-workspace-root
+        run: |
+          npm install --workspaces --include-workspace-root --legacy-peer-deps
+        timeout-minutes: 10
       
       - name: Run backend tests
-        run: cd backend && npm run test || true
+        run: cd backend && npm run test || echo "Tests failed but continuing"
+        timeout-minutes: 10
         env:
           MONGODB_URI: mongodb://localhost:27017/meltdown-test
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY || 'test-key' }}
@@ -72,6 +87,7 @@ jobs:
   build:
     name: Build All
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: [lint-and-typecheck]
     steps:
       - uses: actions/checkout@v4
@@ -83,16 +99,21 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm install --workspaces --include-workspace-root
+        run: |
+          npm install --workspaces --include-workspace-root --legacy-peer-deps
+        timeout-minutes: 10
       
       - name: Build backend
         run: cd backend && npm run build
+        timeout-minutes: 5
       
       - name: Build frontend
         run: cd frontend && npm run build
+        timeout-minutes: 5
       
       - name: Build agents package
-        run: cd packages/agents && npm run build || true
+        run: cd packages/agents && npm run build || echo "Agents build skipped"
+        timeout-minutes: 3
       
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -106,6 +127,7 @@ jobs:
   security-audit:
     name: Security Audit
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       
@@ -116,9 +138,12 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm install --workspaces --include-workspace-root
+        run: |
+          npm install --workspaces --include-workspace-root --legacy-peer-deps
+        timeout-minutes: 10
       
       - name: Run security audit
-        run: npm audit --audit-level=moderate || true
+        run: npm audit --audit-level=moderate || echo "Audit completed with warnings"
+        timeout-minutes: 5
 
 
