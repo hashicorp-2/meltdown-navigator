@@ -9,10 +9,6 @@ on:
 env:
   NODE_VERSION: '20.x'
 
-# Set default timeout for all jobs
-jobs:
-  _timeout: 15m
-
 jobs:
   lint-and-typecheck:
     name: Lint & Type Check
