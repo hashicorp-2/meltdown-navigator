@@ -10,7 +10,6 @@
     "packages/*"
   ],
   "scripts": {
-    "install": "npm install --workspaces --include-workspace-root",
     "dev:web": "npm run dev --workspace @meltdown/web",
     "build:web": "npm run build --workspace @meltdown/web",
     "lint:web": "npm run lint --workspace @meltdown/web",
