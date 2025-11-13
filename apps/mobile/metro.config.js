@@ -18,5 +18,8 @@ config.resolver.nodeModulesPaths = [
 // Allow resolving from common directory
 config.resolver.sourceExts = [...(config.resolver.sourceExts || []), 'ts', 'tsx', 'js', 'jsx'];
 
+// Ensure Metro resolves from project root, not monorepo root
+config.projectRoot = projectRoot;
+
 module.exports = config;
 
