@@ -1,7 +1,7 @@
 import { generateText } from 'ai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createOpenAI } from '@ai-sdk/openai';
-import type { LLMClient } from '@meltdown/agents';
+import type { LLMClient, LLMInvocationOptions } from '@meltdown/agents';
 
 const DEFAULT_TEMPERATURE = Number(process.env.MELTDOWN_AI_TEMPERATURE ?? '0.7');
 const DEFAULT_MAX_TOKENS = Number(process.env.MELTDOWN_AI_MAX_TOKENS ?? '1024');
@@ -36,7 +36,7 @@ export class VercelAIClient implements LLMClient<InvocationPayload, string> {
     this.model = model;
   }
 
-  async invoke(payload: InvocationPayload, options?: InvocationOptions): Promise<string> {
+  async invoke(payload: InvocationPayload, options?: LLMInvocationOptions): Promise<string> {
     const { system_prompt, user_prompt } = payload;
 
     if (!system_prompt || !user_prompt) {
@@ -44,15 +44,15 @@ export class VercelAIClient implements LLMClient<InvocationPayload, string> {
     }
 
     const provider = this.model.startsWith('claude')
-      ? anthropic(this.model)
-      : openai(this.model);
+      ? anthropic(this.model as any)
+      : openai(this.model as any);
 
     const response = await generateText({
-      model: provider,
+      model: provider as any,
       system: system_prompt,
       prompt: user_prompt,
-      temperature: options?.temperature ?? DEFAULT_TEMPERATURE,
-      maxTokens: options?.maxTokens ?? DEFAULT_MAX_TOKENS
+      temperature: (options?.metadata as { temperature?: number })?.temperature ?? DEFAULT_TEMPERATURE,
+      maxTokens: (options?.metadata as { maxTokens?: number })?.maxTokens ?? DEFAULT_MAX_TOKENS
     });
 
     return response.text;

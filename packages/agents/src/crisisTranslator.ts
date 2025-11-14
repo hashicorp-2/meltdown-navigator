@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { createAgent, type AgentLifecycleHooks } from './baseAgent';
+import { createAgent, type AgentLifecycleHooks } from './baseAgent.js';
 import type {
   AgentContext,
   CrisisTranslatorInput,
   CrisisTranslatorOutput
-} from './types';
+} from './types.js';
 
 const CrisisTranslatorSchema = z.object({
   translatedMessage: z.string(),
@@ -42,7 +42,7 @@ export function createCrisisTranslatorAgent(config: CrisisTranslatorAgentConfig)
   return createAgent<CrisisTranslatorInput, CrisisTranslatorOutput>({
     name: 'CrisisTranslator',
     hooks,
-    executor: async (input, runtimeContext) => {
+    executor: async (input: CrisisTranslatorInput, runtimeContext?: AgentContext) => {
       const resolvedContext: AgentContext = {
         ...context,
         ...runtimeContext,

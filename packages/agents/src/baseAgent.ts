@@ -1,4 +1,4 @@
-import type { AgentContext } from './types';
+import type { AgentContext } from './types.js';
 
 export type AgentExecutor<TInput, TOutput> = (
   input: TInput,

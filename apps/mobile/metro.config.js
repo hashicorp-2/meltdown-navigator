@@ -21,5 +21,16 @@ config.resolver.sourceExts = [...(config.resolver.sourceExts || []), 'ts', 'tsx'
 // Ensure Metro resolves from project root, not monorepo root
 config.projectRoot = projectRoot;
 
+// Add path alias resolution for Metro
+config.resolver.alias = {
+  '@components': path.resolve(projectRoot, 'src/components'),
+  '@screens': path.resolve(projectRoot, 'src/screens'),
+  '@navigation': path.resolve(projectRoot, 'src/navigation'),
+  '@store': path.resolve(projectRoot, 'src/store'),
+  '@theme': path.resolve(projectRoot, 'theme'),
+  '@utils': path.resolve(projectRoot, 'src/utils'),
+  '@common': path.resolve(monorepoRoot, 'common'),
+};
+
 module.exports = config;
 

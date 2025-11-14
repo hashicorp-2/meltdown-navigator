@@ -6,9 +6,9 @@ export default function Home() {
   return (
     <AppShell>
       <PageHeader
-        eyebrow="Meltdown Navigator AI Agent · Crisis Translator"
-        title="Translate crisis signals into compassionate connection."
-        subtitle="Capture dysregulated communication, lean on personalized AI insights, and send messages that invite support instead of conflict. This is the heart of the Meltdown Navigator mission—turning overwhelming moments into collaborative care."
+        eyebrow="Meltdown Navigator"
+        title="Grounded support, step by step."
+        subtitle="Input how you're feeling and we'll craft a calm, structured plan your caregiver can follow. Tap the triggers that resonate so the AI knows which patterns to support."
       />
 
       <CrisisTranslatorForm />

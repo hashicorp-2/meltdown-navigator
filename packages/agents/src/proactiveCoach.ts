@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { createAgent, type AgentLifecycleHooks } from './baseAgent';
-import type { AgentContext, ProactiveCoachInput, ProactiveCoachOutput } from './types';
+import { createAgent, type AgentLifecycleHooks } from './baseAgent.js';
+import type { AgentContext, ProactiveCoachInput, ProactiveCoachOutput } from './types.js';
 
 const ProactiveCoachSchema = z.object({
   stressPrediction: z.object({
@@ -44,7 +44,7 @@ export function createProactiveCoachAgent(config: ProactiveCoachAgentConfig) {
   return createAgent<ProactiveCoachInput, ProactiveCoachOutput>({
     name: 'ProactiveCoach',
     hooks,
-    executor: async (input, runtimeContext) => {
+    executor: async (input: ProactiveCoachInput, runtimeContext?: AgentContext) => {
       const resolvedContext: AgentContext = {
         ...context,
         ...runtimeContext,

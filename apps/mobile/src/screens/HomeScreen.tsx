@@ -45,14 +45,19 @@ export function HomeScreen() {
       const id = await getUserId();
       setUserId(id);
 
-      // Check if profile exists
-      const exists = await profileExists(id);
-      if (exists) {
-        const userProfile = await getProfileByUserId(id);
-        setProfile(userProfile);
-        if (userProfile._id) {
-          await AsyncStorage.setItem('meltdown_profileId', userProfile._id);
+      // Check if profile exists - handle errors gracefully
+      try {
+        const exists = await profileExists(id);
+        if (exists) {
+          const userProfile = await getProfileByUserId(id);
+          setProfile(userProfile);
+          if (userProfile._id) {
+            await AsyncStorage.setItem('meltdown_profileId', userProfile._id);
+          }
         }
+      } catch (apiError) {
+        // API errors are non-fatal - app can work without backend
+        console.warn('Backend not available, continuing without profile:', apiError);
       }
     } catch (error) {
       console.error('Failed to initialize user:', error);

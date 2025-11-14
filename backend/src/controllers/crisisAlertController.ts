@@ -23,13 +23,26 @@ export const crisisAlertController = {
 
       let messageSid: string;
 
-      if (payload.userName && payload.stressLevel) {
+      // If mediaUrl is provided, send MMS
+      if (payload.mediaUrl) {
+        const mmsMessage = payload.userName && payload.stressLevel
+          ? `🚨 Meltdown Navigator Alert\n\nFrom: ${payload.userName}\nStress Level: ${payload.stressLevel}/5\n\n${payload.message}`
+          : payload.message;
+        
+        messageSid = await twilioService.sendMMS(
+          payload.to,
+          mmsMessage,
+          payload.mediaUrl
+        );
+      } else if (payload.userName && payload.stressLevel) {
         // Use formatted alert
         messageSid = await twilioService.sendFormattedAlert(payload.to, {
           userName: payload.userName,
           stressLevel: payload.stressLevel,
           message: payload.message,
           actionNeeded: payload.actionNeeded,
+          translatedMessage: payload.translatedMessage,
+          groundingTechnique: payload.groundingTechnique,
         });
       } else {
         // Use simple alert

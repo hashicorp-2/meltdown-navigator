@@ -1,0 +1,36 @@
+{
+  "node": {
+    "405c71b21c57040a5d956440b4eaa85f1b19b7bfe6": {
+      "workers": {
+        "app/page": {
+          "moduleId": 84815,
+          "async": false,
+          "exportedName": "translateCrisis",
+          "filename": "apps/web/app/actions/translateCrisis.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "filename": "apps/web/app/actions/translateCrisis.ts",
+      "exportedName": "translateCrisis"
+    },
+    "4076abaad3a3aa2f1401a13f4b97972f263cb9ee18": {
+      "workers": {
+        "app/page": {
+          "moduleId": 84815,
+          "async": false,
+          "exportedName": "sendCaregiverAlert",
+          "filename": "apps/web/app/actions/sendCaregiverAlert.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "filename": "apps/web/app/actions/sendCaregiverAlert.ts",
+      "exportedName": "sendCaregiverAlert"
+    }
+  },
+  "edge": {},
+  "encryptionKey": "vghxgh5AIE/FdR71faaXdQ/7neT1n5K0xWKpUitHJxI="
+}

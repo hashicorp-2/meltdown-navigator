@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "cd ../.. && npm install --legacy-peer-deps --workspaces --include-workspace-root && cd apps/web",
+  "framework": "nextjs",
+  "devCommand": "npm run dev"
+}
+

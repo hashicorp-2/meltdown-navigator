@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mobile",
+    "name": "meltdown-navigator",
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,6 +8,7 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "main": "index.ts",
+    "scheme": "meltdown-navigator",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -26,6 +27,17 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "adf2e695-387e-4590-9e33-747eb74894db"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/adf2e695-387e-4590-9e33-747eb74894db"
     }
   }
 }

@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "4f5273f4-9274-4062-9c88-0304a33de710"
+      }
+    },
+    "owner": "lhashi",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/4f5273f4-9274-4062-9c88-0304a33de710"
+    },
+    "android": {},
+    "ios": {}
+  }
+}

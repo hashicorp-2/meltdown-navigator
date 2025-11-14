@@ -7,6 +7,8 @@ export interface SupportContact {
   name: string;
   relationship: string;
   contactMethod: ContactMethod;
+  phoneNumber?: string; // E.164 format (e.g., +1234567890)
+  email?: string;
 }
 
 export interface CommunicationGuidelines {
@@ -70,6 +72,8 @@ export const supportContactSchema = z.object({
   name: z.string().min(1, 'Name is required').trim(),
   relationship: z.string().min(1, 'Relationship is required').trim(),
   contactMethod: z.enum(['sms', 'email', 'call']),
+  phoneNumber: z.string().regex(/^\+[1-9]\d{1,14}$/, 'Invalid phone number format. Use E.164 format (e.g., +1234567890)').optional(),
+  email: z.string().email('Invalid email format').optional(),
 });
 
 export const communicationGuidelinesSchema = z.object({
@@ -157,6 +161,9 @@ export const sendCrisisAlertRequestSchema = z.object({
   userName: z.string().optional(),
   stressLevel: z.number().int().min(1).max(5).optional(),
   actionNeeded: z.string().optional(),
+  translatedMessage: z.string().optional(),
+  groundingTechnique: z.string().optional(),
+  mediaUrl: z.string().url().optional(), // For MMS support
 });
 
 export type SendCrisisAlertRequestDTO = z.infer<

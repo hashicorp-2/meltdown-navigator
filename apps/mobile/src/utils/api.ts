@@ -131,19 +131,25 @@ export async function getProfileByUserId(userId: string): Promise<ProfileRespons
  * Checks if a profile exists for a user.
  */
 export async function profileExists(userId: string): Promise<boolean> {
-  const response = await fetch(`${getBackendUrl()}/api/profiles/${userId}/exists`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const response = await fetch(`${getBackendUrl()}/api/profiles/${userId}/exists`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-  if (!response.ok) {
-    return false;
+    if (!response.ok) {
+      return false;
+    }
+
+    const data = await response.json();
+    return data.exists === true;
+  } catch (error) {
+    // Network errors - backend not available
+    console.warn('Backend not reachable:', error);
+    throw error; // Re-throw so caller can handle
   }
-
-  const data = await response.json();
-  return data.exists === true;
 }
 
 

@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { createAgent, type AgentLifecycleHooks } from './baseAgent';
+import { createAgent, type AgentLifecycleHooks } from './baseAgent.js';
 import type {
   AgentContext,
   CommunicationMediatorInput,
   CommunicationMediatorOutput
-} from './types';
+} from './types.js';
 
 const CommunicationMediatorSchema = z.object({
   sentimentAnalysis: z.object({
@@ -35,7 +35,7 @@ function buildPrompt(input: CommunicationMediatorInput): string {
   } = input;
 
   const history = conversationHistory.length
-    ? conversationHistory.map((item, index) => `${index + 1}. ${item}`).join('\n')
+    ? conversationHistory.map((item: string, index: number) => `${index + 1}. ${item}`).join('\n')
     : 'None provided';
 
   return [
@@ -54,7 +54,7 @@ export function createCommunicationMediatorAgent(config: CommunicationMediatorAg
   return createAgent<CommunicationMediatorInput, CommunicationMediatorOutput>({
     name: 'CommunicationMediator',
     hooks,
-    executor: async (input, runtimeContext) => {
+    executor: async (input: CommunicationMediatorInput, runtimeContext?: AgentContext) => {
       const resolvedContext: AgentContext = {
         ...context,
         ...runtimeContext,

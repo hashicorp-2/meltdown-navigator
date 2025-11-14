@@ -10,6 +10,7 @@
     "packages/*"
   ],
   "scripts": {
+    "build": "npm run build:web",
     "dev:web": "npm run dev --workspace @meltdown/web",
     "build:web": "npm run build --workspace @meltdown/web",
     "lint:web": "npm run lint --workspace @meltdown/web",
@@ -18,5 +19,8 @@
   },
   "devDependencies": {
     "rimraf": "5.0.5"
+  },
+  "dependencies": {
+    "expo-updates": "~29.0.12"
   }
 }

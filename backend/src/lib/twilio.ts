@@ -102,22 +102,96 @@ class TwilioService {
       stressLevel: number;
       message: string;
       actionNeeded?: string;
+      translatedMessage?: string;
+      groundingTechnique?: string;
     },
   ): Promise<string> {
-    const { userName, stressLevel, message, actionNeeded } = alertData;
+    const { userName, stressLevel, message, actionNeeded, translatedMessage, groundingTechnique } = alertData;
 
+    const stressEmoji = stressLevel === 5 ? '🚨' : stressLevel === 4 ? '😰' : stressLevel === 3 ? '😫' : stressLevel === 2 ? '😟' : '😌';
+    
     const formattedMessage = [
-      `🚨 Crisis Alert from ${userName}`,
+      `${stressEmoji} Meltdown Navigator Alert`,
       '',
-      `Stress Level: ${stressLevel}/5`,
+      `From: ${userName}`,
+      `Stress Level: ${stressLevel}/5 ${stressEmoji}`,
       '',
-      `Message: ${message}`,
-      ...(actionNeeded ? ['', `Action Needed: ${actionNeeded}`] : []),
+      `Original Message:`,
+      message,
       '',
+      ...(translatedMessage ? [
+        `📝 Translated Message:`,
+        translatedMessage,
+        ''
+      ] : []),
+      ...(groundingTechnique ? [
+        `🧘 Suggested Support:`,
+        groundingTechnique,
+        ''
+      ] : []),
+      ...(actionNeeded ? [`⚡ Action Needed: ${actionNeeded}`, ''] : []),
       'Please reach out to provide support.',
+      '',
+      '— Meltdown Navigator'
     ].join('\n');
 
     return this.sendCrisisAlert(to, formattedMessage);
+  }
+
+  /**
+   * Sends an MMS message with visual context (image URL).
+   *
+   * @param to - The recipient's phone number
+   * @param message - The message content
+   * @param mediaUrl - URL of the image to send
+   * @returns Promise resolving to the message SID
+   */
+  async sendMMS(
+    to: string,
+    message: string,
+    mediaUrl: string
+  ): Promise<string> {
+    if (!this.isAvailable()) {
+      throw new Error(
+        'Twilio is not configured. Please set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and TWILIO_PHONE_NUMBER environment variables.',
+      );
+    }
+
+    if (!to || !message) {
+      throw new Error('Recipient phone number and message are required.');
+    }
+
+    if (!/^\+[1-9]\d{1,14}$/.test(to)) {
+      throw new Error(
+        'Invalid phone number format. Please use E.164 format (e.g., +1234567890).',
+      );
+    }
+
+    try {
+      const result = await this.client!.messages.create({
+        body: message,
+        from: this.fromNumber!,
+        to,
+        mediaUrl: [mediaUrl]
+      });
+
+      console.info('[TwilioService] MMS sent', {
+        to,
+        messageSid: result.sid,
+        status: result.status,
+        mediaUrl
+      });
+
+      return result.sid;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown Twilio error';
+      console.error('[TwilioService] Failed to send MMS', {
+        to,
+        error: errorMessage,
+      });
+      throw new Error(`Failed to send MMS: ${errorMessage}`);
+    }
   }
 }
 
